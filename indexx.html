@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UWEYYYSTORE | Premium Carrier</title>
+    <style>
+        /* Variabel Warna & Reset */
+        :root {
+            --primary: #4f46e5;
+            --secondary: #f59e0b;
+            --dark: #1e1b4b;
+            --light: #f8fafc;
+            --accent: #ec4899;
+        }
+
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            margin: 0; padding: 0; line-height: 1.6; 
+            background-color: var(--light); color: #333;
+        }
+
+        /* Header */
+        header { 
+            background: var(--dark); color: white; padding: 1.2rem 5%; 
+            display: flex; justify-content: space-between; align-items: center;
+            position: sticky; top: 0; z-index: 1000;
+        }
+        #logo h2 { margin: 0; color: var(--secondary); text-transform: uppercase; }
+        nav a { color: white; margin-left: 20px; text-decoration: none; cursor: pointer; }
+
+        /* Hero */
+        .hero { 
+            background: linear-gradient(135deg, #4f46e5 0%, #ec4899 100%);
+            color: white; padding: 80px 20px; text-align: center; 
+        }
+
+        /* Produk */
+        .produk-section { padding: 50px 5%; max-width: 1200px; margin: auto; }
+        .produk-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 30px; }
+        .card-produk { background: white; padding: 20px; text-align: center; border-radius: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+        .card-produk img { width: 100%; height: 200px; object-fit: cover; border-radius: 10px; }
+        
+        .btn-beli { 
+            background: var(--primary); color: white; border: none; padding: 12px; 
+            width: 100%; border-radius: 8px; cursor: pointer; font-weight: bold;
+        }
+
+        /* Modal Keranjang */
+        #modal-keranjang {
+            display: none; position: fixed; z-index: 2000; left: 0; top: 0;
+            width: 100%; height: 100%; background: rgba(0,0,0,0.7);
+        }
+        .modal-content {
+            background: white; margin: 5% auto; padding: 25px; width: 90%; max-width: 500px;
+            border-radius: 15px; max-height: 80vh; overflow-y: auto;
+        }
+        .item-keranjang { display: flex; justify-content: space-between; border-bottom: 1px solid #ddd; padding: 10px 0; }
+        
+        /* Form Alamat */
+        .form-checkout { margin-top: 20px; display: flex; flex-direction: column; gap: 10px; }
+        .form-checkout input, .form-checkout textarea { padding: 10px; border: 1px solid #ccc; border-radius: 5px; }
+        .btn-wa { background: #25d366; color: white; border: none; padding: 15px; border-radius: 8px; font-weight: bold; cursor: pointer; }
+
+        footer { background: var(--dark); color: white; text-align: center; padding: 30px; margin-top: 50px; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div id="logo"><h2>uweyyystore</h2></div>
+        <nav>
+            <a href="#">Home</a>
+            <a href="#produk">Produk</a>
+            <a onclick="bukaKeranjang()">🛒 Keranjang (<span id="count-keranjang">0</span>)</a>
+        </nav>
+    </header>
+
+    <main>
+        <section class="hero">
+            <h1>Adventure Starts Here</h1>
+            <p>Pilih tas carrier favoritmu dan mulai petualangan!</p>
+        </section>
+
+        <section id="produk" class="produk-section">
+            <div class="produk-grid">
+                <article class="card-produk">
+                    <img src="rhinos 45l.jpg" alt="eiger rhinos">
+                    <h3>Eiger Rhinos 45L</h3>
+                    <p>Rp 1.200.000</p>
+                    <button class="btn-beli" onclick="tambahKeKeranjang('Eiger Rhinos 45L', 1200000)">Tambah ke Keranjang</button>
+                </article>
+                <article class="card-produk">
+                    <img src="osprey atmos.jpg" alt="osprey atmos">
+                    <h3>Osprey Atmos 65L</h3>
+                    <p>Rp 2.800.000</p>
+                    <button class="btn-beli" onclick="tambahKeKeranjang('Osprey Atmos 65L', 2800000)">Tambah ke Keranjang</button>
+                </article>
+                <article class="card-produk">
+                    <img src="ecosavior.jpg" alt="eiger ecosavior">
+                    <h3>Eiger Ecosavior 50L</h3>
+                    <p>Rp 3.500.000</p>
+                    <button class="btn-beli" onclick="tambahKeKeranjang('Eiger Ecosavior 50L', 3500000)">Tambah ke Keranjang</button>
+                </article>
+            </div>
+        </section>
+    </main>
+
+    <div id="modal-keranjang">
+        <div class="modal-content">
+            <h3>🛒 Keranjang Belanja</h3>
+            <div id="list-item-keranjang">
+                </div>
+            <p><strong>Total: Rp <span id="total-harga">0</span></strong></p>
+            
+            <hr>
+            <h4>Data Pengiriman</h4>
+            <div class="form-checkout">
+                <input type="text" id="nama-pembeli" placeholder="Nama Lengkap" required>
+                <textarea id="alamat-pembeli" placeholder="Alamat Lengkap Pengiriman" rows="3" required></textarea>
+                <button class="btn-wa" onclick="kirimWA()">Pesan via WhatsApp</button>
+                <button onclick="tutupKeranjang()" style="background:none; border:none; color:red; cursor:pointer;">Batal</button>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2026 uweyystore. All Rights Reserved.</p>
+    </footer>
+
+    <script>
+        let keranjang = [];
+        let total = 0;
+
+        function tambahKeKeranjang(nama, harga) {
+            keranjang.push({ nama, harga });
+            total += harga;
+            updateUI();
+            alert(nama + " berhasil ditambahkan!");
+        }
+
+        function updateUI() {
+            document.getElementById('count-keranjang').innerText = keranjang.length;
+            const list = document.getElementById('list-item-keranjang');
+            list.innerHTML = '';
+            
+            keranjang.forEach((item) => {
+                list.innerHTML += `<div class="item-keranjang"><span>${item.nama}</span> <span>Rp ${item.harga.toLocaleString()}</span></div>`;
+            });
+            
+            document.getElementById('total-harga').innerText = total.toLocaleString();
+        }
+
+        function bukaKeranjang() {
+            document.getElementById('modal-keranjang').style.display = 'block';
+        }
+
+        function tutupKeranjang() {
+            document.getElementById('modal-keranjang').style.display = 'none';
+        }
+
+        function kirimWA() {
+            const nama = document.getElementById('nama-pembeli').value;
+            const alamat = document.getElementById('alamat-pembeli').value;
+            const nomorWA = "+6283129254021"; // GANTI DENGAN NOMOR WA ANDA
+
+            if (keranjang.length === 0) return alert("Keranjang masih kosong!");
+            if (!nama || !alamat) return alert("Mohon lengkapi nama dan alamat!");
+
+            let detailBarang = "";
+            keranjang.forEach((item, index) => {
+                detailBarang += `${index + 1}. ${item.nama} (Rp ${item.harga.toLocaleString()})\n`;
+            });
+
+            const pesan = `Halo uweyystore, saya ingin pesan:\n\n${detailBarang}\n*Total:* Rp ${total.toLocaleString()}\n\n*Data Pengiriman:*\nNama: ${nama}\nAlamat: ${alamat}`;
+            const url = `https://wa.me/${nomorWA}?text=${encodeURIComponent(pesan)}`;
+            
+            window.open(url, '_blank');
+        }
+    </script>
+</body>
+</html>
